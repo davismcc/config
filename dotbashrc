@@ -1,0 +1,69 @@
+# .bashrc
+
+### Source Stegle definitions
+if [ -f /nfs/software/stegle/system/bashrc ]; then
+    . /nfs/software/stegle/system/bashrc
+fi
+
+# by default activate my python (anaconda) environment
+source activate py3
+
+# User specific aliases and functions
+export http_proxy="http://pg-wwwcache.ebi.ac.uk:3128"
+export https_proxy="http://pg-wwwcache.ebi.ac.uk:3128"
+# for linuxbrew
+# export PATH="$PATH:$HOME/.linuxbrew/bin"
+# export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
+# export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
+export EDITOR="emacs"
+export REF_PATH="/hps/nobackup/stegle/users/davis/cram_cache/%2s/%2s/%s:http://www.ebi.ac.uk/ena/cram/md5/%s"
+export REF_CACHE="/hps/nobackup/stegle/users/davis/cram_cache/%2s/%2s/%s"
+
+LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/nfs/software/stegle/users/davis/conda-envs/py2/lib"
+export LD_LIBRARY_PATH
+
+# export PERL5LIB="/nfs/software/stegle/vcftools/src/perl/"
+
+# add to PATH variable
+# PATH="$PATH:/nfs/software/stegle/curl-7.49.1:/nfs/software/stegle/bedtools2/bin:~/software" # 
+export PATH=/nfs/software/stegle/cellranger/cellranger-1.3.1:$PATH
+export PATH=$PATH:/nfs/software/stegle:/nfs/software/stegle/bin:/nfs/software/stegle/bin/bin
+export PATH=/nfs/software/stegle/users/dseaton/java/jdk1.8.0_112/bin/java:$PATH
+export PATH=/nfs/software/stegle/system/bin:/nfs/software/stegle/system/linuxbrew/sbin:/nfs/software/stegle/system/linuxbrew/bin:$PATH
+export PATH
+
+# add aliases for software#
+alias coverageBed=/nfs/software/stegle/bedtools2/bin/coverageBed
+# alias cramtools="java -jar /nfs/software/stegle/cramtools-3.0.jar"
+
+# for NGSCheckMate
+export NCM_HOME=/nfs/software/stegle/NGSCheckMate
+
+# create some useful aliases for navigating files
+alias lc="ls -C"
+alias lm="ls -al | more"
+alias dirs="ls -al | grep '^d'"     # show the dir's in the current dir
+alias h=history                     # show the history of commands issued
+alias np="ps -ef|wc -l"             # np - number of processes running
+alias p="ps -ef"
+alias cdd="cd /hps/nobackup/stegle/users/davis"
+alias cdsc="cd /hps/nobackup/hipsci/scratch"
+alias java="/nfs/software/stegle/users/dseaton/java/jdk1.8.0_112/bin/java"
+alias picard="java -jar /nfs/software/stegle/users/dseaton/picard/picard.jar"
+alias cdoc="cd /nfs/research2/stegle/users/davis/projects/singlecell_endodiff/"
+
+# R 3.4.1
+alias R34="/nfs/software/stegle/system/linuxbrew/bin/R"
+alias Rscript34="/nfs/software/stegle/system/linuxbrew/bin/Rscript"
+
+# mimick a few DOS commands with these aliases:
+alias cd..="cd ../.."
+alias cd...="cd ../../.."
+alias dir="ls -al"
+alias emacs="emacs -nw"
+alias edit="emacs -nw"
+alias help="man"
+alias path="echo $PATH"
+
+transfer() { if [ $# -eq 0 ]; then echo -e "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"; return 1; fi 
+tmpfile=$( mktemp -t transferXXX ); if tty -s; then basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g'); curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile; else curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile ; fi; cat $tmpfile; rm -f $tmpfile; } 
